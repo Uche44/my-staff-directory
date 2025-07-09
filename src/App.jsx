@@ -14,11 +14,6 @@ const router = createBrowserRouter([
     element: <EmployeePage />,
   },
 
-
-  // {
-  //   path: "*",
-  //   element: <NotFound />,
-  // },
 ]);
 
 const App = () => {
