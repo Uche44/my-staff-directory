@@ -6,7 +6,7 @@ const countriesApiUrl =
   "https://pkgstore.datahub.io/core/world-cities/world-cities_json/data/5b3dd46ad10990bca47b04b4739a02ba/world-cities_json.json";
 
 const EmployeeForm = ({ initialData }) => {
-  const { employees, setEmployees, setIsFormOpen } = useEmployeeContext();
+  const { setEmployees, setIsFormOpen } = useEmployeeContext();
 
   const [formData, setFormData] = useState(
     initialData || {
@@ -16,6 +16,7 @@ const EmployeeForm = ({ initialData }) => {
       address: "",
       role: "",
       department: "",
+      gradeLevel: "",
     }
   );
   const [errors, setErrors] = useState({});
@@ -70,6 +71,7 @@ const EmployeeForm = ({ initialData }) => {
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.role) newErrors.role = "Role is required";
     if (!formData.department) newErrors.department = "Department is required";
+    if (!formData.gradeLevel) newErrors.gradeLevel = "Grade Level is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -85,18 +87,6 @@ const EmployeeForm = ({ initialData }) => {
     }
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (validate()) {
-  //     // Generate a unique id for the new employee
-  //     const newEmployee = {
-  //       ...formData,
-  //       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-  //     };
-  //     const updatedEmployees = [...employees, newEmployee];
-  //     setEmployees(updatedEmployees);
-  //     localStorage.setItem("employees", JSON.stringify(updatedEmployees)); cc
-  //
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
@@ -108,7 +98,7 @@ const EmployeeForm = ({ initialData }) => {
           emp.id === initialData.id ? { ...emp, ...formData } : emp
         );
       } else {
-        // Add mode with unique 4-character id
+       
         let newId;
         do {
           newId = Math.random().toString(36).substr(2, 4);
@@ -122,7 +112,7 @@ const EmployeeForm = ({ initialData }) => {
       }
       localStorage.setItem("employees", JSON.stringify(updatedEmployees));
       setEmployees(updatedEmployees);
-      // Reset or close form as needed
+      
       setFormData({
         name: "",
         country: "",
@@ -130,24 +120,25 @@ const EmployeeForm = ({ initialData }) => {
         address: "",
         role: "",
         department: "",
+        gradeLevel: "",
       });
       setIsFormOpen(false);
     }
   };
 
   return (
-    <section className="w-full h-screen flex items-center justify-center bg-black/70 fixed top-0 left-0">
+    <section className="w-full h-screen flex items-center justify-center bg-black/80 fixed top-0 left- z-1000">
       <form
         className="max-w-lg mx-auto p-8 bg-[#B89B5E] rounded shadow space-y-6"
         onSubmit={handleSubmit}
         noValidate
       >
-        <h2 className="text-2xl font-bold mb-4">Employee Form</h2>
+        <h2 className="text-2xl font-bold mb-4">Employee Details</h2>
 
         {/* Name */}
         <div>
           <label
-            className="block font-medium mb-1"
+            className="md:block font-medium mb-1 hidden"
             htmlFor="name"
           >
             Name
@@ -159,6 +150,7 @@ const EmployeeForm = ({ initialData }) => {
             type="text"
             id="name"
             name="name"
+            placeholder="Enter Employee name"
             value={formData.name}
             onChange={handleChange}
           />
@@ -170,7 +162,7 @@ const EmployeeForm = ({ initialData }) => {
         {/* Country */}
         <div>
           <label
-            className="block font-medium mb-1"
+            className="md:block hidden font-medium mb-1"
             htmlFor="country"
           >
             Country
@@ -203,7 +195,7 @@ const EmployeeForm = ({ initialData }) => {
         {/* State */}
         <div>
           <label
-            className="block font-medium mb-1"
+            className="md:block hidden  font-medium mb-1"
             htmlFor="state"
           >
             State
@@ -236,7 +228,7 @@ const EmployeeForm = ({ initialData }) => {
         {/* Address */}
         <div>
           <label
-            className="block font-medium mb-1"
+            className="md:block hidden  font-medium mb-1"
             htmlFor="address"
           >
             Address
@@ -248,6 +240,7 @@ const EmployeeForm = ({ initialData }) => {
             type="text"
             id="address"
             name="address"
+            placeholder="Enter Employee address"
             value={formData.address}
             onChange={handleChange}
           />
@@ -259,7 +252,7 @@ const EmployeeForm = ({ initialData }) => {
         {/* Role */}
         <div>
           <label
-            className="block font-medium mb-1"
+            className="md:block hidden font-medium mb-1"
             htmlFor="role"
           >
             Role
@@ -291,7 +284,7 @@ const EmployeeForm = ({ initialData }) => {
         {/* Department */}
         <div>
           <label
-            className="block font-medium mb-1"
+            className="md:block hidden font-medium mb-1"
             htmlFor="department"
           >
             Department
@@ -320,8 +313,36 @@ const EmployeeForm = ({ initialData }) => {
           )}
         </div>
 
+        {/* Grade Level */}
+        <div>
+          <label
+            htmlFor="gradeLevel"
+            className="md:block hidden font-medium mb-1"
+          >
+            Grade Level
+          </label>
+          <select
+            id="gradeLevel"
+            name="gradeLevel"
+            value={formData.gradeLevel}
+            onChange={handleChange}
+            className={`w-full border rounded px-3 py-2 focus:outline-none ${
+              errors.gradeLevel ? "border-red-500" : "border-gray-300"
+            }`}
+
+          >
+            <option value="">Select grade level</option>
+            <option value="Entry">Entry Level</option>
+            <option value="Mid">Mid Level</option>
+            <option value="Senior">Expert Level</option>
+            {/* Add more as needed */}
+          </select>
+          {errors.gradeLevel && (
+            <p className="text-red-500 text-sm mt-1">{errors.gradeLevel}</p>
+          )}
+        </div>
+
         <button
-          // onClick={() => setIsFormOpen(false)}
           type="submit"
           className="w-full bg-black/70 text-white py-2 rounded hover:bg-black/80 transition"
         >

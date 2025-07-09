@@ -7,7 +7,7 @@ const EmployeePage = () => {
   const { id } = useParams();
   const { employees, isFormOpen, setIsFormOpen } = useEmployeeContext();
 
-  // Find the employee by id
+
   const employee = employees.find((emp) => emp.id === id);
 
   if (!employee) {
@@ -18,18 +18,54 @@ const EmployeePage = () => {
     setIsFormOpen(true);
   };
 
+  const getGradeBg = (grade) => {
+    if (!grade) return "bg-gray-200";
+    switch (grade.toLowerCase()) {
+      case "entry":
+      case "entry level":
+        return "bg-green-500 text-white";
+      case "mid":
+      case "mid level":
+        return "bg-yellow-400 text-black";
+      case "senior":
+      case "expert level":
+        return "bg-blue-500 text-white";
+      default:
+        return "bg-gray-200";
+    }
+  };
+
   return (
-    <section className="w-full h-screen px-6 py-8 bg-black/80 text-gray-100">
+    <section className="w-full h-screen px-6 py-17 bg-black/80 text-gray-100 relative md:px-8">
       {isFormOpen && <EmployeeForm initialData={employee} />}
 
-      {/* <div className="w-full"> */}
-        <h1 className="text-4xl font-bold text-[#B89B5E] border-b-1 border-[#B89B5E] mb-4 py-4">
-          {employee.name}
-        </h1>
+    
+      <h1 className="text-4xl font-bold text-[#B89B5E] border-b-1 border-[#B89B5E] mb-4 py-4">
+        {employee.name}
+      </h1>
 
-<h2 className="text-[#B89B5E]/95 font-bold  text-right my-4">ID: {employee.id}</h2>
+      <h2 className="text-[#B89B5E]/95 font-bold  text-right my-4">
+        ID: {employee.id}
+      </h2>
 
-      {/* </div> */}
+
+      {employee.gradeLevel && (
+        <div
+          className={`mt-2 px-3 py-4 w-20 shadow-lg absolute top-4 right-4 rounded font-semibold text-center md:right-8 ${getGradeBg(
+            employee.gradeLevel
+          )}`}
+        >
+          {employee.gradeLevel === "Entry"
+            ? "Entry"
+            : employee.gradeLevel === "Mid"
+            ? "Mid"
+            : employee.gradeLevel === "Senior"
+            ? "Senior"
+            : employee.gradeLevel}
+        </div>
+      )}
+
+     
       <table className="min-w-[300px] bg-white text-black rounded shadow mb-4">
         <tbody>
           <tr>
